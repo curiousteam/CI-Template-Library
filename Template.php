@@ -44,6 +44,20 @@ class Template
 	 */
 	private $css_styles;
 
+	/**
+	 * Javascript files to load with the template
+	 *
+	 * @var array
+	 */
+	private $js_files;
+
+	/**
+	 * Javascript code to insert into the template
+	 *
+	 * @var array
+	 */
+	private $js_code;
+
 
 
 	public function __construct()
@@ -93,6 +107,8 @@ class Template
 		$data['view_content_block'] = $main_content;
 		$data['template_css_files'] = $this->get_css_files();
 		$data['template_css_styles'] = $this->get_css_styles();
+		$data['template_js_files'] = $this->get_js_files();
+		$data['template_js_code'] = $this->get_js_code();
 
 		return $this->CI->load->view($template, $data, $return_data);
 	}
@@ -199,6 +215,80 @@ class Template
 			}
 
 			return $tag . "</style>\n";
+		}
+		return null;
+	}
+
+
+	/**
+	 * Set javascript files to be loaded on the fly with the template
+	 *
+	 * @param 	string|array 	$js_file 	One or more javascript files to load
+	 * @return 	void
+	 */
+	public function set_js_file($js_file)
+	{
+		if ( ! is_array($js_file))
+		{
+			$js_file = array($js_file);
+		}
+
+		foreach ($js_file as $js)
+		{
+			$this->js_files[] = $js;
+		}
+	}
+
+
+	/**
+	 * Return <script> tags for each defined javascript file
+	 *
+	 * @return 	string 	<script> tags if any jsvascript file loaded or nothing if empty
+	 */
+	private function get_js_files()
+	{
+		if (count($this->js_files) > 0)
+		{
+			$tag = '';
+			foreach ($this->js_files as $file)
+			{
+				$tag .= '<script src="'. $file .'.js" type="text/javascript"></script>'."\n";
+			}
+			return $tag;
+		}
+		return null;
+	}
+
+
+	/**
+	 * Define javascript code to be put into the <script> tag
+	 *
+	 * @param 	string 	$js_code 	Javascript codes to be inserted into the <script> tag
+	 * @return 	void
+	 */
+	public function set_js_code($js_code)
+	{
+		$this->js_code[] = $js_code;
+	}
+
+
+	/**
+	 * Return a <script> tag with the codes defined
+	 *
+	 * @return 	string 	<script> tag with the defined codes or nothing if empty
+	 */
+	private function get_js_code()
+	{
+		if (count($this->js_code) > 0)
+		{
+			$tag = '<script type="text/javascript">'."\n";
+			
+			foreach($this->js_code as $js)
+			{
+				$tag .= $js . "\n";
+			}
+
+			return $tag . "</script>\n";
 		}
 		return null;
 	}
