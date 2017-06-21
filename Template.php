@@ -30,16 +30,36 @@ class Template
 	 */
 	private $template;
 
+	/**
+	 * CSS files to load into the template
+	 *
+	 * @var array
+	 */
+	private $css_files;
+
+	/**
+	 * CSS style to insert into the template
+	 *
+	 * @var array
+	 */
+	private $css_styles;
+
 
 
 	public function __construct()
 	{
 		$this->CI =& get_instance();
-		$this->use('default');
+		$this->set('default');
 	}
 
 
-	public function use($template)
+	/**
+	 * Define the template to be used when rendering the view
+	 *
+	 * @param 	string 	$template 	Template name
+	 * @return 	void
+	 */
+	public function set($template)
 	{
 		$this->template = 'templates/' . $template;
 	}
@@ -71,6 +91,8 @@ class Template
 		}
 
 		$data['view_content_block'] = $main_content;
+		$data['template_css_files'] = $this->get_css_files();
+		$data['template_css_styles'] = $this->get_css_styles();
 
 		return $this->CI->load->view($template, $data, $return_data);
 	}
@@ -97,4 +119,87 @@ class Template
 			return $filename;
 		}
 	}
-}
+
+
+	/**
+	 * Set CSS files to be loaded on the fly to the template
+	 *
+	 * @param 	string|array 	$css_file 	One or more CSS files to load
+	 * @return 	void
+	 */
+	public function set_css_file($css_file)
+	{
+		if ( ! is_array($css_file))
+		{
+			$css_file = array($css_file);
+		}
+
+		foreach ($css_file as $css)
+		{
+			$this->css_files[] = $css;
+		}
+	}
+
+
+	/**
+	 * Return <link> tags for each defined CSS file
+	 *
+	 * @return 	string 	<link> tags if any CSS file loaded or nothing if empty
+	 */
+	private function get_css_files()
+	{
+		if (count($this->css_files) > 0)
+		{
+			$tag = '';
+			foreach ($this->css_files as $file)
+			{
+				$tag .= '<link rel="stylesheet" href="'. $file .'.css" />'."\n";
+			}
+			return $tag;
+		}
+		return null;
+	}
+
+
+	/**
+	 * Define CSS style to be put into the <style> tag
+	 *
+	 * @param 	array 	$css_style 	Array with elements and it's styles formated
+	 *								as ['element' => ['atribute' => 'value']}
+	 * @return 	void
+	 */
+	public function set_css_style($css_style)
+	{
+		foreach($css_style as $element => $styles)
+		{
+			$this->css_styles[$element] = $styles;
+		}
+	}
+
+
+	/**
+	 * Return a <style> tag with the elements defined
+	 *
+	 * @return 	string 	<style> tag with the defined elements or nothing if empty
+	 */
+	private function get_css_styles()
+	{
+		if (count($this->css_styles) > 0)
+		{
+			$tag = '<style>'."\n";
+			
+			foreach($this->css_styles as $element => $styles)
+			{
+				$tag .= $element . " {\n";
+				foreach($styles as $key => $value)
+				{
+					$tag .= "\t" . $key . ": " . $value . ";\n";
+				}
+				$tag .= "}\n";
+			}
+
+			return $tag . "</style>\n";
+		}
+		return null;
+	}
+ }
