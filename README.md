@@ -19,9 +19,9 @@ $autoload['libraries'] = array('Template');
 
 Your template files must be at `application/views/templates` folder.
 
-You can set your template by calling the `use` method:
+You can set your template by calling the `set` method:
 ```
-$this->template->use('template_name');
+$this->template->set('template_name');
 ```
 By default, the class will look for a `default.tpl` or `default.php`.
 
