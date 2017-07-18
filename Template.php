@@ -1,11 +1,12 @@
 <?php if ( ! defined('BASEPATH')) exit('No direct script acccess allowed');
-
 /**
  * Template Class
  *
  * This class enables the use of templates with your views. 
  *
  * Use $this->Template->render instead
+ *
+ * @TODO: check if the CSS and JS files are local files or URLs
  *
  * @package		Application
  * @subpackage	Libraries
@@ -152,7 +153,7 @@ class Template
 
 		foreach ($css_file as $css)
 		{
-			$this->css_files[] = $css;
+			$this->css_files[] = $css . '.css';
 		}
 	}
 
@@ -169,7 +170,7 @@ class Template
 			$tag = '';
 			foreach ($this->css_files as $file)
 			{
-				$tag .= '<link rel="stylesheet" href="'. $file .'.css" />'."\n";
+				$tag .= '<link href="'. site_url($file) .'" rel="stylesheet" type="text/css" />'."\n";
 			}
 			return $tag;
 		}
@@ -235,7 +236,7 @@ class Template
 
 		foreach ($js_file as $js)
 		{
-			$this->js_files[] = $js;
+			$this->js_files[] = $js . '.js';
 		}
 	}
 
@@ -252,7 +253,7 @@ class Template
 			$tag = '';
 			foreach ($this->js_files as $file)
 			{
-				$tag .= '<script src="'. $file .'.js" type="text/javascript"></script>'."\n";
+				$tag .= '<script src="'. site_url($file) .'" type="text/javascript"></script>'."\n";
 			}
 			return $tag;
 		}
