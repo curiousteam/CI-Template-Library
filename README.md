@@ -1,4 +1,4 @@
-<p align="center"><img src="http://www.cleiver.com/github/GitHub-CodeIgniter-Template-Library.png" alt="CodeIgniter Template Library" /></p>
+![CodeIgniter Template Library](http://assets.cleiver.com/externals/github/CodeIgniter-Template-Library.png "CodeIgniter Template Library")
 
 I think it's odd that a framework as big as CodeIgniter doesn't have a native way of working with templates, but I'm sure they have their reasons. That's why I decided to implement my version of a class to do it. :sweat_smile:
 
